@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Products{% endblock %}
+
+{% block content %}
+<div class="products-container">
+    <h1>Our Products</h1>
+    <div class="products-grid">
+        {% for product in products %}
+        <div class="product-card">
+            <img src="{{ product.ImageURL or url_for('static', filename='images/default.png') }}" 
+                 alt="{{ product.Name }}" class="product-image">
+            <div class="product-info">
+                <h3>{{ product.Name }}</h3>
+                <p class="product-description">{{ product.Description }}</p>
+                <p class="product-price">${{ "%.2f"|format(product.Price) }}</p>
+                <div class="product-actions">
+                    <a href="{{ url_for('main.get_product', id=product.ProductID) }}" 
+                       class="btn btn-details">View Details</a>
+                    <button class="btn btn-primary" 
+                            onclick="addToCart('{{ product.ProductID }}')">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+function addToCart(productId) {
+    fetch('/api/cart', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            product_id: productId,
+            quantity: 1
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('Product added to cart!');
+    })
+    .catch(error => {
+        alert('Please login to add items to cart');
+    });
+}
+</script>
+{% endblock %}

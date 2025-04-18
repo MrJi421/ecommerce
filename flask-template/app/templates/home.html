@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h1>Welcome to Flask E-commerce</h1>
+<button onclick="testDBConnection()">Test Database Connection</button>
+<p id="dbStatus"></p>
+
+<script>
+function testDBConnection() {
+    fetch('/test-db')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('dbStatus').innerHTML = data.message;
+            document.getElementById('dbStatus').style.color = data.status ? 'green' : 'red';
+        })
+        .catch(error => {
+            document.getElementById('dbStatus').innerHTML = 'Error testing connection';
+            document.getElementById('dbStatus').style.color = 'red';
+        });
+}
+</script>
+{% endblock %}
